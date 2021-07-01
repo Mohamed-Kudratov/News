@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <form>
+        <div class="input-group my-3">
+            <input value="{{ request.GET.q }}" type="text" name="q" class="form-control">
+            <div class="input-group-append">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+                <a href="/news/create/">
+                    <button class="btn btn-outline-primary" type="button">Create</button>
+                </a>
+                <a href="/admin/logout/">
+                    <button class="btn btn-outline-info" type="button">Logout</button>
+                </a>
+            </div>
+        </div>
+    </form>
+    <table class="table table-bordered">
+        <tr>
+            <th>News</th>
+            <th>Created date</th>
+            <th>Categories</th>
+            <th>Actions</th>
+        </tr>
+        <tr>
+            {% for news in object_list %}
+                <tr>
+                    <td>{{ news.title }}</td>
+                    <td>{{ news.created_at|date:'d-m-Y H:i' }}</td>
+                    <td>
+                        <ul>
+                            {% for category in news.category.all %}
+                                <li>{{ category.title }} </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-around">
+                            <a href="/news/{{ news.pk }}/">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a href="/news/{{ news.pk }}/update/">
+                                <i class="fa fa-pencil-alt text-warning"></i>
+                            </a>
+                            <form onsubmit="return confirm('Are you sure to delete News?')" method="post"
+                                  action="/news/{{ news.pk }}/delete/">
+                                {% csrf_token %}
+                                <button type="submit">
+                                    <i class="fa fa-trash text-danger"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+</body>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</html>

@@ -1,0 +1,5 @@
+<h1>{{ news.title }}</h1>
+{% if news.cover %}
+    <img src="{{ news.cover.url }}" alt="picture">
+{% endif %}
+<h4>{{ news.content }}</h4>
